@@ -12,13 +12,18 @@ config();
 const app = express();
 const server = http.createServer(app);
 
+// Set the view engine to EJS
+app.set("view engine", "ejs");
+
+app.set("views", pathModule.resolve("./public"));
+
 // allow requesting files under ./public
 app.use(express.static("./public"));
 
 // prepare a file when user requests /
 app.get("/", (req, res) => {
-    const idxPath = pathModule.resolve("./public/index.ejs");
-    res.render(idxPath, { title: "No title set" });
+    //const idxPath = pathModule.resolve("./public/index.ejs");
+    res.render("index", { title: "Landing Page" });
 });
 
 // listen to requests
