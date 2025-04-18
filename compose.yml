@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: postgresdb
     volumes:
       - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   adminer:
       image: adminer
@@ -21,6 +23,7 @@ services:
       context: ./nginx
     ports:
       - "80:80"
+
   webapp:
     build: ./app
     ports:

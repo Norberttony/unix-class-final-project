@@ -3,11 +3,8 @@ import pathModule from "path";
 
 import express from "express";
 import http from "http";
+import { dbPool } from "./modules/database.mjs";
 
-import { config } from "dotenv";
-
-// set up the .env variables to appear under process.env
-config();
 
 const app = express();
 const server = http.createServer(app);
