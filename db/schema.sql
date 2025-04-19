@@ -1,8 +1,6 @@
 
-CREATE DATABASE webapp_db;
-
 CREATE TABLE Posts (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     title VARCHAR(50),
     content TEXT
 );
