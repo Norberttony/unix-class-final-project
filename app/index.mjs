@@ -31,8 +31,8 @@ app.get("/post/:id", async (req, res) => {
         return res.sendStatus(400); // bad request
 
     // fetch the post
-    const post = await dbPool.query(`SELECT title, content FROM Posts WHERE id=${id}`);
-    res.render("pages/post", post);
+    const postResult = await dbPool.query(`SELECT title, content FROM Posts WHERE id=${id}`);
+    res.render("pages/post", postResult.rows[0]);
 });
 
 // listen to requests
