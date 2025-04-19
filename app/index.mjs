@@ -3,11 +3,8 @@ import pathModule from "path";
 
 import express from "express";
 import http from "http";
+import { dbPool } from "./modules/database.mjs";
 
-import { config } from "dotenv";
-
-// set up the .env variables to appear under process.env
-config();
 
 const app = express();
 const server = http.createServer(app);
@@ -21,9 +18,21 @@ app.set("views", pathModule.resolve("./public"));
 app.use(express.static("./public"));
 
 // prepare a file when user requests /
-app.get("/", (req, res) => {
-    //const idxPath = pathModule.resolve("./public/index.ejs");
-    res.render("index", { title: "Landing Page" });
+app.get("/", async (req, res) => {
+    const fetchPosts = await dbPool.query("SELECT id, title, content FROM Posts");
+    res.render("pages/index", { posts: fetchPosts.rows });
+});
+
+// fetch the post whenever the user searches with a post/number
+app.get("/post/:id", async (req, res) => {
+    // validate input
+    const id = req.params.id;
+    if (isNaN(id))
+        return res.sendStatus(400); // bad request
+
+    // fetch the post
+    const postResult = await dbPool.query(`SELECT title, content FROM Posts WHERE id=${id}`);
+    res.render("pages/post", postResult.rows[0]);
 });
 
 // listen to requests

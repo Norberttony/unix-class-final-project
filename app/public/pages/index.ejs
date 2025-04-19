@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Landing Page</title>
+    </head>
+    <body>
+        
+        <h1>Here are the available posts:</h1>
+        
+        <% for (const post of posts){ %>
+            <%- include("./templates/post-excerpt.ejs", post) %>
+        <% } %>
+
+    </body>
+</html>
