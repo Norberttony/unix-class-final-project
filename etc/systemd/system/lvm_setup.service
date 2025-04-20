@@ -1,0 +1,12 @@
+[Unit]
+Description=Setup LVM and Docker Volume Mount
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/setup_lvm.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
