@@ -1,0 +1,54 @@
+In GCP console:
+Go to disks ⇒ create new disk
+Go to your VM ⇒ edit ⇒ attach existing disk (make sure it’s in the same zone)
+
+In the VM ssh console:
+	Sudo apt update
+	Sudo apt install -y lvm2
+
+Make physical volume:
+
+Sudo pvcreate /dev/sda
+
+Make virtual group:
+
+Sudo vgcreate volGroup /dev/sda
+
+
+ Make logical volume:
+
+	Sudo lvcreate -n linuxProject -L 5G volGroup 
+	(5G = size; change if need)
+
+Adding filsystem and mount:
+	
+	Sudo mkfs -t ext4 /dev/volGroup/linuxProject
+	Sudo Mkdir /mnt/lvm_dir
+	Sudo mount /dev/volGroup/linuxProject /mnt/lvm_dir
+
+In /etc/fstab:
+/dev/volGroup/linuxProject /mnt/lvm_dir ext4 defaults 0 2
+
+	^^ for automatic mount if the container fails
+
+
+
+In docker volume file:
+docker volume create \
+  --driver local \
+  --opt type=none \
+  --opt device=/mnt/lvm_dir \
+  --opt o=bind \
+  LVM_volume
+
+In Docker bash shell:
+
+	Docker run –restart unless-stopped -v LVM_volume:/app/data [app image]
+
+
+
+Create snapshot for backup:
+	
+	Sudo lvcreate –size 5G –snapshot –name first_snap /dev/volGroup/linuxProject
+
+	(check if created ⇒) sudo vgs
