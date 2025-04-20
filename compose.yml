@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: password123
       POSTGRES_DB: postgresdb
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - /mnt/lvm_dir/postgresql_data:/var/lib/postgresql/data
       - ./db/schema.sql:/docker-entrypoint-initdb.d/create_database.sql
     ports:
       - "5432:5432"
@@ -46,9 +46,6 @@ services:
       - DB_NAME=postgresdb
     networks:
       - webnet
-
-volumes:
-  pgdata:
 
 networks:
   webnet:
