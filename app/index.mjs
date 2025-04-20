@@ -35,6 +35,12 @@ app.get("/post/:id", async (req, res) => {
     res.render("pages/post", postResult.rows[0]);
 });
 
+// simulate a crash
+app.get("/crash", async (req, res) => {
+    res.send("Crashed successfully");
+    process.exit(1);
+});
+
 // listen to requests
 server.listen(3000);
 console.log(`Listening to port 3000`);
