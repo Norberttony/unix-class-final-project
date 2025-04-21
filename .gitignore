@@ -1,3 +1,5 @@
 
 node_modules
 .env
+POSTGRES_PASSWORD="password123"
+DB_PASSWORD="password123
