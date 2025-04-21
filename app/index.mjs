@@ -5,6 +5,8 @@ import express from "express";
 import http from "http";
 import { dbPool } from "./modules/database.mjs";
 
+import bodyParser from "body-parser";
+
 
 const app = express();
 const server = http.createServer(app);
@@ -15,12 +17,30 @@ app.set("view engine", "ejs");
 app.set("views", pathModule.resolve("./public"));
 
 // allow requesting files under ./public
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(express.json());
 app.use(express.static("./public"));
 
 // prepare a file when user requests /
 app.get("/", async (req, res) => {
     const fetchPosts = await dbPool.query("SELECT id, title, content FROM Posts");
     res.render("pages/index", { posts: fetchPosts.rows });
+});
+
+app.get("/create", (req, res) => {
+    res.render("pages/create.ejs");
+});
+
+app.post("/create", async (req, res) => {
+    console.log(req.body);
+    let { title, content } = req.body;
+    title = title.replaceAll("'", '"');
+    content = content.replaceAll("'", '"');
+    await dbPool.query(`INSERT INTO Posts (title, content) VALUES ('${title}', '${content}')`);
+    res.redirect("/");
 });
 
 // fetch the post whenever the user searches with a post/number
